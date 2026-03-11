@@ -1,0 +1,87 @@
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><help_text>Rating</help_text><element><id>UMLClass</id><coordinates><x>275</x><y>277</y><w>80</w><h>24</h></coordinates><panel_attributes>Author</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>275</x><y>381</y><w>80</w><h>24</h></coordinates><panel_attributes>Book
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>275</x><y>469</y><w>80</w><h>24</h></coordinates><panel_attributes>Review
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>611</x><y>469</y><w>80</w><h>24</h></coordinates><panel_attributes>User
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>275</x><y>541</y><w>88</w><h>24</h></coordinates><panel_attributes>Recommendation
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>283</x><y>189</y><w>160</w><h>208</h></coordinates><panel_attributes>lt=-
+m1=1..*
+m2=1..*
+write v</panel_attributes><additional_attributes>10;10;140;10;140;180;40;180;40;240</additional_attributes></element><element><id>Relation</id><coordinates><x>307</x><y>397</y><w>72</w><h>88</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+is about ^</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>211</x><y>381</y><w>80</w><h>200</h></coordinates><panel_attributes>lt=-
+concerns ^
+m1=1
+m2=*
+
+</panel_attributes><additional_attributes>80;10;10;10;10;220;80;220</additional_attributes></element><element><id>Relation</id><coordinates><x>347</x><y>461</y><w>280</w><h>40</h></coordinates><panel_attributes>lt=-
+m1=*
+m2=1
+&lt; create  </panel_attributes><additional_attributes>10;20;330;20</additional_attributes></element><element><id>Relation</id><coordinates><x>355</x><y>485</y><w>320</w><h>88</h></coordinates><panel_attributes>lt=-
+m1=1..*
+m2=*
+receive v</panel_attributes><additional_attributes>360;10;360;80;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>355</x><y>485</y><w>336</w><h>104</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+create v</panel_attributes><additional_attributes>390;10;390;100;10;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>611</x><y>381</y><w>80</w><h>24</h></coordinates><panel_attributes>LibraryEntry</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>843</x><y>237</y><w>80</w><h>24</h></coordinates><panel_attributes>/Bookshelf/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>515</x><y>373</y><w>112</w><h>40</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+&lt; contains</panel_attributes><additional_attributes>10;20;120;20</additional_attributes></element><element><id>Relation</id><coordinates><x>643</x><y>397</y><w>56</w><h>88</h></coordinates><panel_attributes>lt=-
+m1=*
+m2=1
+own ^</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>755</x><y>325</y><w>120</w><h>24</h></coordinates><panel_attributes>ReadingStatusBookshelf</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>899</x><y>325</y><w>88</w><h>24</h></coordinates><panel_attributes>CustomBookshelf</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>723</x><y>133</y><w>104</w><h>80</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+ReadingStatus
+-
+TO_READ
+CURRENTLY_READING
+READ
+DNF</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>907</x><y>253</y><w>24</w><h>88</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>843</x><y>253</y><w>24</w><h>88</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>779</x><y>205</y><w>64</w><h>136</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+status v</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>443</x><y>149</y><w>80</w><h>120</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+Format
+-
+HARDCOVER
+PAPERBACK
+MASSMARKET
+KINDLE
+EBOOK
+AUDIOBOOK
+WEBCOMIC
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>475</x><y>261</y><w>40</w><h>136</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+is ^</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>603</x><y>133</y><w>72</w><h>96</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+Condition
+-
+NEW
+VERY GOOD
+GOOD
+ACCEPTABLE
+UNSPECIFIED
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>627</x><y>221</y><w>40</w><h>176</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+is ^</panel_attributes><additional_attributes>10;10;10;200</additional_attributes></element><element><id>UMLClass</id><coordinates><x>755</x><y>381</y><w>104</w><h>24</h></coordinates><panel_attributes>ShelfPlacement
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>659</x><y>205</y><w>120</w><h>192</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+has status ^</panel_attributes><additional_attributes>120;10;120;90;20;90;20;220</additional_attributes></element><element><id>Relation</id><coordinates><x>683</x><y>381</y><w>88</w><h>40</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1..*
+has &gt;</panel_attributes><additional_attributes>10;20;90;20</additional_attributes></element><element><id>Relation</id><coordinates><x>851</x><y>253</y><w>200</w><h>160</h></coordinates><panel_attributes>lt=-
+m1=*
+m2=1
+has ^</panel_attributes><additional_attributes>10;170;200;170;200;10;90;10</additional_attributes></element><element><id>Relation</id><coordinates><x>683</x><y>237</y><w>384</w><h>264</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=4..*
+has ^</panel_attributes><additional_attributes>10;300;450;300;450;10;300;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>443</x><y>381</y><w>80</w><h>24</h></coordinates><panel_attributes>Edition
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>347</x><y>373</y><w>112</w><h>40</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+&lt; contains</panel_attributes><additional_attributes>10;20;120;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>155</x><y>277</y><w>80</w><h>24</h></coordinates><panel_attributes>Illustrator</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>211</x><y>189</y><w>80</w><h>32</h></coordinates><panel_attributes>&lt;&lt;trait&gt;&gt;
+Creator
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>275</x><y>213</y><w>80</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>211</x><y>213</y><w>80</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element></diagram>
