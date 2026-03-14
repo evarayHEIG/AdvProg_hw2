@@ -4,7 +4,7 @@
  * @param name the name of the bookshelf
  * @author Eva Ray
  */
-abstract class Bookshelf (
+abstract class Bookshelf (   // jpc: perhaps a trait?
   val name: String
 ):
   /**

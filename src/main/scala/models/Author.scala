@@ -15,5 +15,5 @@ object Author:
    * @param raw the raw author name from CSV
    * @return a new Author with an empty book list
    */
-  def fromCsv(raw: String): Author =
+  def fromCsv(raw: String): Author =    //jpc: not necessarily Csv, it's just a string
     Author(raw.trim, List())

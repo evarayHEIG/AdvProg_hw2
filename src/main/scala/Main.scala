@@ -1,7 +1,10 @@
 import com.github.tototoshi.csv._
 import java.io.File
 
-object Main extends App {
+
+// jpc: we can use the @main decorator instead of the App, which is a bit old style
+//object Main extends App {
+@main def main =
 
   // Parser form the scala-csv library to read the CSV file
   val parser = GoodreadCSVParser
@@ -79,4 +82,4 @@ object Main extends App {
   println("========== ALL AUTHORS ==========")
   for author <- authors do
     println(author)
-}
+//}

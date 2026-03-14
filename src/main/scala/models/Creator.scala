@@ -29,4 +29,4 @@ trait Creator:
             case author: Author => author.copy(books = book :: author.books)
             case illustrator: Illustrator => illustrator.copy(books = book :: illustrator.books)
             case _ => this
-        ).asInstanceOf[this.type]
+        ).asInstanceOf[this.type]   // jpc: in some cases this cpuld be seen as bexond the scope of the Creator trait, as we deal with the specificities of Illustrators and Authors
