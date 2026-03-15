@@ -27,7 +27,7 @@ Le schéma ci-dessous représente les classes et les relations qui modélisent l
 
 ![Class diagram](figures/class_diagram_h3.png)
 
-Les changements principaux sont:
+Pour apporter plus de complexité au modèle de données et pouvoir utiliser des fonctionnalités avancées de type de Scala, les changements suivants ont été faits entre le modèle de données du homework 2 et celui du homework 3:
 - Transformation de l'enum `Format` en trait avec des implémentations spécifiques pour les différents formats d'édition (physique, ebook, audio).
 - Transformation des classes `Edition` et `LibraryEntry` en traits implémentés différement si l'édition est physique ou digitale.
 - Grâce à la meilleure distinction physique/digital, l'enum `Condition` est maintenant utilisée uniquement pour les éditions physiques, ce qui a plus de sens.
@@ -52,10 +52,11 @@ foo match
 
 ### Homework 3
 
-Pour apporter plus de complexité au modèle de données et pouvoir utiliser des fonctionnalités avancées de type de Scala, l'enum representant les formats d'édition a été transformée en trait, ce qui permet de faire la distinction entre les éditions physiques, ebooks et audio à travers diverses implémentations de ce trait. (Voir schéma du modèle de données à la fin du homework 3.)
+Les utilisations suivantes de fonctionnalités avancées de type de Scala ont été faites:
+
 - **Alias de type**: Des alias de type ont été utilisés pour `UserId`, `ISBN`, `ISBN13`, `Year`, `Date` et `Rating` pour améliorer la lisibilité du code et faciliter les modifications futures.
 - **Type paramétré**: Le trait `Edition` a été transformé en type paramétré pour faire la distinction entre les éditions physiques, ebooks et audio. Cela permet d'avoir des types plus spécifiques pour chaque format d'édition tout en partageant une interface commune.
-- **Type members**: Un type membre `Self <: LibraryEntry` a été utilisé dans le trait `LibraryEntry` pour permettre d'implémenter directement dans le trait les méthodes partagées par toutes les implémentations qui utilisent `copy` pour retourner une nouvelle instance du même type. Cela évite d'avoir à redéfinir ces méthodes de manière indentique dans chaque implémentation. De plus, cela permet de garder le type concret au retour des méthodes.
+- **Type members**: Un type membre `Self <: LibraryEntry` a été utilisé dans le trait `LibraryEntry` pour permettre d'implémenter directement dans le trait les méthodes partagées par toutes les implémentations qui utilisent `copy` pour retourner une nouvelle instance du même type. Cela évite d'avoir à redéfinir ces méthodes de manière indentique dans chaque implémentation. De plus, cela permet de garder le type concret au retour des méthodes. Une approche similaire a été utilisée pour le trait `Creator` avec un type membre `Self <: Creator` pour permettre d'implémenter la méthode `addBook` directement dans le trait.
 - **Covariance**: La covariance a été utilisée pour le trait `Edition[+F <: Format]`. Cela signifie que si `F1` est un sous-type de `F2`, alors `Edition[F1]` est un sous-type de `Edition[F2]`. Cela permet de manipuler de manière uniforme les différents types d'éditions plus spécifiques sans cast explicite.
 - **Contravariance**: La contravariance a été utilisée pour le trait `EditionMatcher[-F <: Format]`. Cela signifie que si `F1` est un sous-type de `F2`, alors `EditionMatcher[F2]` est un sous-type de `EditionMatcher[F1]`. Cela permet d'utiliser un matcher plus général pour matcher des éditions plus spécifiques. La contravariance est adaptée aux "consommateurs" d'objets, ce qui est le cas ici.
 - **Union de types**: Une union de type est utilisée dans `DigitalEdition` avec `EbookType | AudioType` pour indiquer que le format d'une édition digitale peut être soit un ebook, soit un audio. Cela permet de modéliser proprement sans perdre la sécurité de type ni tout rabattre sur un type trop large. (On aurait aussi pu ajouter un enum `DigitalType` dans la hiérarchie des formats, mais dans un cas aussi simple, l'union de types est plus concise et tout aussi efficace.)

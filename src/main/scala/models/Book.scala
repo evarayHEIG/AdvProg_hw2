@@ -43,10 +43,10 @@ object Book:
         Book(
             id = raw.bookId.toInt,
             title = raw.title,
-            author = Author.fromCsv(raw.author),
+            author = Author.fromString(raw.author),
             additionalAuthors = raw.additionalAuthors.trim match
                 case "" => None
-                case nonEmpty => Some(nonEmpty.split(",").toList.map(Author.fromCsv)),
+                case nonEmpty => Some(nonEmpty.split(",").toList.map(Author.fromString)),
             averageRating = raw.averageRating.trim match
                 case "" => None
                 case nonEmpty => Some(nonEmpty.toDouble),

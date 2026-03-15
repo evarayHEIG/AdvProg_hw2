@@ -28,7 +28,7 @@ import java.io.File
     val book = Book.fromCsv(row)
     var entry = LibraryEntry.fromCsv(row)
     val bookshelves = Bookshelf.parseBookshelves(row.bookshelvesWithPositions, row.exclusiveShelf) 
-    var author = Author.fromCsv(row.author)
+    var author = Author.fromString(row.author)
     // Process recommendations - only add if there is a non-empty recommendation field
     if row.recommendedFor.trim.nonEmpty || row.recommendedBy.trim.nonEmpty then
       val recommendation = Recommendation(

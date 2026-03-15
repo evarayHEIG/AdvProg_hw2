@@ -10,6 +10,20 @@ trait Creator:
     val name: String
     val books: List[Book]
 
+    // The type member Self allows us to define methods in the Creator trait that return the correct concrete type 
+    // when creating modified copies of the creator. This is necessary because the Creator trait itself does not know 
+    // whether it is an Author or an Illustrator, and we want to maintain immutability while allowing modifications 
+    // to the creator's details. (Similar as in LibraryEntry with the Self type member)
+    type Self <: Creator
+
+    /* Creates a copy of this creator with an updated list of books. This is used to maintain immutability while allowing 
+     * modifications to the creator's details.
+     *
+     * @param newBooks the new list of books to associate with this creator
+     * @return a new instance of Creator with the updated list of books
+     */
+    def makeCopy(newBooks: List[Book] = books): Self
+
     /**
       * Returns a string representation of the creator and their books.
       *
@@ -24,9 +38,5 @@ trait Creator:
       * @param book The book to be added to the creator's list of books.
       * @return the updated creator instance with the new book added to their list of books.
       */
-    def addBook(book: Book): this.type =
-        (this match
-            case author: Author => author.copy(books = book :: author.books)
-            case illustrator: Illustrator => illustrator.copy(books = book :: illustrator.books)
-            case _ => this
-        ).asInstanceOf[this.type]   // jpc: in some cases this cpuld be seen as bexond the scope of the Creator trait, as we deal with the specificities of Illustrators and Authors
+    def addBook(book: Book): Self =
+        this.makeCopy(newBooks = book :: this.books) 
