@@ -4,9 +4,9 @@
  * @param name the name of the bookshelf
  * @author Eva Ray
  */
-abstract class Bookshelf (
+trait Bookshelf:
   val name: String
-):
+  
   /**
     * Returns a string representation of the bookshelf details.
     *

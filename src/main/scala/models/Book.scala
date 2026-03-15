@@ -1,3 +1,5 @@
+import Types.Year
+
 /**
  * Represents a book with its details.
  * 
@@ -13,7 +15,8 @@ case class Book(
     title: String,
     author: Creator,
     additionalAuthors: Option[List[Creator]] = None,
-    averageRating: Option[Double] = None 
+    averageRating: Option[Double] = None,
+    originalPublicationYear: Option[Year] = None 
 ):
     /**
       * Returns a string representation of the book details.
@@ -25,7 +28,8 @@ case class Book(
         s"- title: $title\n" +
         s"- author: ${author.name}\n" +
         s"- additionalAuthors: ${additionalAuthors.getOrElse("None")}\n" +
-        s"- averageRating: ${averageRating.getOrElse("None")}\n"
+        s"- averageRating: ${averageRating.getOrElse("None")}\n" +
+        s"- originalPublicationYear: ${originalPublicationYear.getOrElse("None")}\n"
 
 object Book:
 
@@ -45,5 +49,8 @@ object Book:
                 case nonEmpty => Some(nonEmpty.split(",").toList.map(Author.fromCsv)),
             averageRating = raw.averageRating.trim match
                 case "" => None
-                case nonEmpty => Some(nonEmpty.toDouble)
+                case nonEmpty => Some(nonEmpty.toDouble),
+            originalPublicationYear = raw.originalPublicationYear.trim match
+                case "" => None
+                case nonEmpty => Some(nonEmpty.toInt)
         )

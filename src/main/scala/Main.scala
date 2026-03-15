@@ -17,7 +17,7 @@ object Main extends App {
   // Collections to hold all parsed data
   var books = List.empty[Book]
   var reviews = List.empty[Review]
-  var authors = List.empty[Author]
+  var authors = List.empty[Creator]
   var recommendations = List.empty[Recommendation]
 
   // For the example CSV, let's say it is Alice's library
@@ -74,9 +74,13 @@ object Main extends App {
 
   // Print summary of parsed data, Alice's library, her favorite books, and all authors in the system.
   println(s"Parsed ${books.length} books and ${reviews.length} reviews for user ${alice.name}")
-  alice.printLibrary(100)
+  alice.printLibrary(30)
   alice.printFavoriteBooks(reviews, 3)
-  println("========== ALL AUTHORS ==========")
-  for author <- authors do
-    println(author)
+  println("========== SOME AUTHORS ==========")
+  for author <- authors.take(10) do
+    println(s"- ${author}")
+  println("========== GOOD MATCHES FOR ALICE ==========")
+  for entry <- alice.libraryEntries.take(20) do
+    if alice.isEditionAGoodMatch(entry.edition) then
+      println(s"- ${entry.edition.book.title}")
 }

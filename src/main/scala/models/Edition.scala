@@ -1,3 +1,6 @@
+import Types.ISBN
+import Types.ISBN13
+import Types.Year
 /**
  * Represents a specific edition of a book.
  * 
@@ -5,20 +8,23 @@
  * @param isbn the ISBN identifier
  * @param isbn13 the ISBN-13 identifier
  * @param publisher the publisher name
- * @param format the physical or digital format
+ * @param format the format of the book edition (e.g., Hardcover, Paperback, Ebook, Audiobook)
  * @param nbPages the number of pages
  * @param publicationYear the year of publication
  * @author Eva Ray
+ * @note This trait is parametrized by a format type [F] which allows us to represent different formats of editions.
+ * @note This trait is covariant in the format type parameter [F] to allow a single edition type to represent different
+ * formats (e.g., physical or digital) while maintaining type safety.
  */
-case class Edition (
-    book: Book,
-    isbn: Option[String] = None,
-    isbn13: Option[String] = None,
-    publisher: Option[String] = None,
-    format: Option[Format] = None,
-    nbPages: Option[Int] = None,
-    publicationYear: Option[String] = None
-):
+trait Edition[+F <: Format]:
+    val book: Book
+    val isbn: Option[ISBN] = None
+    val isbn13: Option[ISBN13] = None
+    val publisher: Option[String] = None
+    val format: Option[F] = None
+    val nbPages: Option[Int] = None
+    val publicationYear: Option[Year] = None
+
     /**
      * Returns a formatted string representation of the edition.
      * 
@@ -41,23 +47,29 @@ object Edition:
      * @param raw the parsed Goodreads CSV row
      * @return a new Edition instance
      */
-    def fromCsv(raw: GoodreadsRow): Edition =
-        Edition(
-            book = Book.fromCsv(raw),
-            isbn = raw.isbn.trim match
-                case "" => None
-                case nonEmpty => Some(nonEmpty),
-            isbn13 = raw.isbn13.trim match
-                case "" => None
-                case nonEmpty => Some(nonEmpty),
-            publisher = raw.publisher.trim match
-                case "" => None
-                case nonEmpty => Some(nonEmpty),
-            format = Format.fromCsv(raw.binding),
-            nbPages = raw.numberOfPages.trim match
-                case "" => None
-                case nonEmpty => Some(nonEmpty.toInt),
-            publicationYear = raw.yearPublished.trim match
-                case "" => None
-                case nonEmpty => Some(nonEmpty)
-        )
+    def fromCsv(raw: GoodreadsRow): Edition[Format] =
+
+        val book = Book.fromCsv(raw)
+        val isbn = raw.isbn.trim match
+            case "" => None
+            case nonEmpty => Some(nonEmpty)
+        val isbn13 = raw.isbn13.trim match
+            case "" => None
+            case nonEmpty => Some(nonEmpty)
+        val publisher = raw.publisher.trim match
+            case "" => None
+            case nonEmpty => Some(nonEmpty)
+        val format = Format.fromCsv(raw.binding)
+        val nbPages = raw.numberOfPages.trim match
+            case "" => None
+            case nonEmpty => Some(nonEmpty.toInt)
+        val publicationYear = raw.yearPublished.trim match
+            case "" => None
+            case nonEmpty => Some(nonEmpty.toInt)
+
+        format match
+            case Some(p: PhysicalType) => PhysicalEdition(book, isbn, isbn13, publisher, Some(p), nbPages, publicationYear)
+            case Some(d: (EbookType | AudioType)) => DigitalEdition(book, isbn, isbn13, publisher, Some(d), nbPages, publicationYear)
+            case _ => PhysicalEdition(book, isbn, isbn13, publisher, None, nbPages, publicationYear) // Default to physical
+
+

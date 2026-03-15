@@ -1,7 +1,4 @@
-/**
- * Type alias for user identifiers.
- */
-type UserId = Int
+import Types.UserId
 
 /**
  * Represents a user with their library and bookshelves.
@@ -18,7 +15,8 @@ case class User(
     name: String,
     email: String,
     libraryEntries: List[LibraryEntry] = List.empty,
-    bookshelves: List[Bookshelf] = List.empty
+    bookshelves: List[Bookshelf] = List.empty,
+    preference: UserPreference = UserPreference.casualReader
 ):
     /**
      * Returns a formatted string representation of the user.
@@ -89,7 +87,7 @@ case class User(
      * Prints the user's library to the console.
      */
     def printLibrary(n: Int): Unit =
-        println(s"========== ${n} BOOKS FROM ${this.name}'s LIBRARY ==========")
+        println(s"========== ${n} BOOKS FROM ${this.name.toUpperCase()}'s LIBRARY ==========")
         for entry <- libraryEntries.take(n) do
             println(s"- ${entry.edition.book.title} by ${entry.edition.book.author} (status: ${entry.readingStatus}, format: ${entry.edition.format.getOrElse("Unknown")}, bookshelves: ${entry.bookshelves.map(_.toString()).mkString(", ")})")
 
@@ -110,7 +108,7 @@ case class User(
      * @param n number of top books to print
      */
     def printFavoriteBooks(reviews: List[Review], n: Int): Unit =
-        println(s"========== ${this.name}'s TOP $n FAVORITE BOOKS ==========")
+        println(s"========== ${this.name.toUpperCase()}'s TOP $n FAVORITE BOOKS ==========")
         favoriteBooks(reviews, n) match
             case Nil => println("No rated books found.")
             case favs => favs.foreach(review => println(s"- ${review.book.title} (${review.rating.get} stars)"))
@@ -123,6 +121,25 @@ case class User(
      */
     def getBookshelf(bookshelfName: String): Option[Bookshelf] =
         this.bookshelves.find(_.name == bookshelfName)
+
+    /**
+     * Retrieves bookshelves of a specific subtype.
+     * Demonstrates covariance with type parameter [B <: Bookshelf] and use of ClassTag
+     * to overcome type erasure.
+     * 
+     * @return list of bookshelves matching the specified type
+     */
+    def getBookshelvesByType[B <: Bookshelf](implicit tag: reflect.ClassTag[B]): List[B] =
+        bookshelves.collect { case b: B => b }
+
+    /**
+     * Determines if a given edition is a good match for the user's preferences using the general edition matcher.
+     * 
+     * @param edition the edition to evaluate
+     * @return true if the edition is a good match, false otherwise
+     */
+    def isEditionAGoodMatch(edition: Edition[Format]): Boolean =
+        EditionMatcher.generalMatcher.isGoodFor(this.preference, edition)
 
 object User:
 

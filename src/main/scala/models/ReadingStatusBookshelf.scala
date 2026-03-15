@@ -5,4 +5,4 @@
  * @param readingStatus the reading status associated with this bookshelf
  * @author Eva Ray
  */
-case class ReadingStatusBookshelf(override val name: String, readingStatus: ReadingStatus) extends Bookshelf(name: String)
+case class ReadingStatusBookshelf(val name: String, readingStatus: ReadingStatus) extends Bookshelf

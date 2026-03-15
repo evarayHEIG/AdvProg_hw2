@@ -1,3 +1,5 @@
+import Types.UserId
+
 /**
  * Represents a book recommendation made by one user to one or more other users.
  * 

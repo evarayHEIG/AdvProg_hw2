@@ -1,3 +1,6 @@
+import Types.UserId
+import Types.Rating
+
 /**
  * Represents a book review written by a user.
  * 
@@ -10,7 +13,7 @@
 case class Review (
     book: Book,
     user: UserId,
-    rating: Option[Int] = None,
+    rating: Option[Rating] = None,
     text: String,
 ):
     /**
@@ -32,7 +35,7 @@ object Review:
      * @param rating the rating value to validate
      * @return Some(rating) if between 1-5, None otherwise
      */
-    def validatedRating(rating: Int): Option[Int] =
+    def validatedRating(rating: Int): Option[Rating] =
         rating match
             case r if r >= 1 && r <= 5 => Some(r)
             case _ => None
