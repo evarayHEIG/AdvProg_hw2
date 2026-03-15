@@ -15,4 +15,4 @@ object Illustrator:
     * @return a new Illustrator with an empty book list
     */
   def fromCsv(raw: String): Illustrator =
-    Illustrator(raw.trim, List())
+    Illustrator(raw.trim, List())    // jpc: same, not necessarily a csv, it's a string

@@ -11,7 +11,7 @@ import Types.UserId
 case class Recommendation(
     book: Book,
     recommendedBy: Option[UserId],
-    recommendedTo: Option[List[UserId]]
+    recommendedTo: Option[List[UserId]]  // jpc: do we need the option or an empty list would do?
 ):
     /**
      * Returns a formatted string representation of the recommendation.

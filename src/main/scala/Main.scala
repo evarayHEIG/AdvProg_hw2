@@ -1,7 +1,7 @@
 import com.github.tototoshi.csv._
 import java.io.File
 
-object Main extends App {
+@main def main =
 
   // Parser form the scala-csv library to read the CSV file
   val parser = GoodreadCSVParser
@@ -83,4 +83,3 @@ object Main extends App {
   for entry <- alice.libraryEntries.take(20) do
     if alice.isEditionAGoodMatch(entry.edition) then
       println(s"- ${entry.edition.book.title}")
-}
