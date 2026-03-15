@@ -30,6 +30,7 @@ Le schéma ci-dessous représente les classes et les relations qui modélisent l
 Pour apporter plus de complexité au modèle de données et pouvoir utiliser des fonctionnalités avancées de type de Scala, les changements suivants ont été faits entre le modèle de données du homework 2 et celui du homework 3:
 - Transformation de l'enum `Format` en trait avec des implémentations spécifiques pour les différents formats d'édition (physique, ebook, audio).
 - Transformation des classes `Edition` et `LibraryEntry` en traits implémentés différement si l'édition est physique ou digitale.
+- Transformation de la classe abstraite `Bookshelf` en trait car la class abstraite n'apportait pas de valeur ajoutée.
 - Grâce à la meilleure distinction physique/digital, l'enum `Condition` est maintenant utilisée uniquement pour les éditions physiques, ce qui a plus de sens.
 - Ajout de la classe `UserPreference` pour modéliser les préférences de lecture d'un utilisateur et de la classe `EditionMatcher` pour faire le lien entre les préférences d'un utilisateur et les éditions disponibles dans la bibliothèque. Ces ajouts ont été faits pour pouvoir donner un exemple de contravariance (consommateur d'objets).
 
