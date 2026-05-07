@@ -117,3 +117,9 @@ class UserTest extends AnyFlatSpec with Matchers:
 		user.bookshelves.map(_.name).toSet shouldBe Bookshelf.systemBookshelves.map(_.name).toSet
 		user.bookshelves.size shouldBe Bookshelf.systemBookshelves.size
 	}
+
+	"Review.validatedRating" should "return Some for a valid rating and None otherwise" in {
+		Review.validatedRating(5) shouldBe Some(5)
+		Review.validatedRating(0) shouldBe None
+		Review.validatedRating(6) shouldBe None
+	}
