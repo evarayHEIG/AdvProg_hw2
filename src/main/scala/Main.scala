@@ -3,6 +3,9 @@ import java.io.File
 
 @main def main =
 
+  // Context abstraction for edition matching, this is the default matcher
+  given EditionMatcher[Edition[Format]] = EditionMatcher.generalMatcher
+
   // Parser form the scala-csv library to read the CSV file
   val parser = GoodreadCSVParser
 
@@ -72,14 +75,32 @@ import java.io.File
         val updatedAuthor = existingAuthor.addBook(book)
         authors = updatedAuthor :: authors.filterNot(_.name == author.name)    
 
+  // Fill user Bob's library with 20% of Alice's library (to showcase similarity calculations later on)
+  val bobBooks = alice.libraryEntries.take((alice.libraryEntries.length * 0.2).toInt)
+  var bob = users(1)
+  for entry <- bobBooks do
+    bob = bob.addLibraryEntry(entry)
+
   // Print summary of parsed data, Alice's library, her favorite books, and all authors in the system.
   println(s"Parsed ${books.length} books and ${reviews.length} reviews for user ${alice.name}")
-  alice.printLibrary(30)
-  alice.printFavoriteBooks(reviews, 3)
+  alice.printLibrary(20)
   println("========== SOME AUTHORS ==========")
   for author <- authors.take(10) do
     println(s"- ${author}")
-  println("========== GOOD MATCHES FOR ALICE ==========")
-  for entry <- alice.libraryEntries.take(20) do
-    if alice.isEditionAGoodMatch(entry.edition) then
-      println(s"- ${entry.edition.book.title}")
+
+  println("========== ADDITIONAL EXPLORATIONS (HW 5)==========")
+  alice.printFavoriteBooks(reviews, 3)
+  alice.printBestRatedAuthors(reviews, 5)
+  alice.printMostShelvedAuthors(5)
+  print("Similarity between Alice and Bob based on their libraries: ")
+  println(f"${UserSimilarity.userSimilarity(alice, bob, UserSimilarity.userJaccardSimilarity)}%.2f")
+  println(LibraryExploration.ifLibraryNotEmpty(alice){
+    LibraryStats.aggregateLibraryStats(alice, reviews)
+    }.getOrElse("Alice's library is empty, cannot compute stats."))
+
+  val matchingEditions = LibraryExploration.recommend(alice, alice.libraryEntries.map(_.edition), 10)
+  println("========== RECOMMENDED EDITIONS FOR ALICE ==========")
+  for edition <- matchingEditions do
+    println(s"- ${edition.book.title} by ${edition.book.author.name}")
+
+  

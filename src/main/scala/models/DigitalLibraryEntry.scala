@@ -1,5 +1,3 @@
-import Types.Date
-
 /**
   * Represents a library entry for a digital edition of a book. It extends the LibraryEntry trait.
   *
@@ -14,10 +12,10 @@ import Types.Date
   */
 case class DigitalLibraryEntry(
     edition: DigitalEdition,
-    dateAdded: Date,
+    dateAdded: String,
     override val readingStatus: ReadingStatus = ReadingStatus.ToRead,
-    override val dateRead: Option[Date] = None,
-    override val purchaseDate: Option[Date] = None,
+    override val dateRead: Option[String] = None,
+    override val purchaseDate: Option[String] = None,
     override val privateNotes: Option[String] = None,
     override val readCount: Int = 0,
     override val bookshelves: List[ShelfPlacement] = List()
@@ -28,7 +26,7 @@ case class DigitalLibraryEntry(
     override def makeCopy(
         newBookshelves: List[ShelfPlacement] = bookshelves,
         newReadingStatus: ReadingStatus = readingStatus,
-        newDateRead: Option[Date] = dateRead,
+        newDateRead: Option[String] = dateRead,
         newReadCount: Int = readCount
     ): DigitalLibraryEntry =
         this.copy(

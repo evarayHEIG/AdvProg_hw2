@@ -18,6 +18,9 @@ case class Author(name: String, books: List[Book]) extends Creator:
   def makeCopy(newBooks: List[Book]): Self =
     this.copy(books = newBooks)
 
+  override def toString(): String =
+    s"$name"
+
 object Author:
 
   /**

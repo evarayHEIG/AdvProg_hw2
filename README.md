@@ -15,6 +15,16 @@ sbt run
 
 Le programme load les données du CSV dans des collections Scala et affiche dans le terminal: 100 livres de la bibliothèque de l'utilisateur, ses 3 livres préférés et tous les auteurs du système.
 
+## Lancer les tests
+
+Au niveau du fichier `build.sbt`, lancer la commande suivante dans le terminal:
+
+```bash
+sbt test
+```
+
+Si tous les tests passent, vous devriez voir le message `All tests passed.` dans le terminal.
+
 ## Modèle de données
 
 Le schéma ci-dessous représente les classes et les relations qui modélisent les données du CSV d'export GoodReads. C'est une vue très haut niveau qui ne contient ni les attributs ni les méthodes des classes. 
@@ -62,3 +72,23 @@ Les utilisations suivantes de fonctionnalités avancées de type de Scala ont é
 - **Contravariance**: La contravariance a été utilisée pour le trait `EditionMatcher[-F <: Format]`. Cela signifie que si `F1` est un sous-type de `F2`, alors `EditionMatcher[F2]` est un sous-type de `EditionMatcher[F1]`. Cela permet d'utiliser un matcher plus général pour matcher des éditions plus spécifiques. La contravariance est adaptée aux "consommateurs" d'objets, ce qui est le cas ici.
 - **Union de types**: Une union de type est utilisée dans `DigitalEdition` avec `EbookType | AudioType` pour indiquer que le format d'une édition digitale peut être soit un ebook, soit un audio. Cela permet de modéliser proprement sans perdre la sécurité de type ni tout rabattre sur un type trop large. (On aurait aussi pu ajouter un enum `DigitalType` dans la hiérarchie des formats, mais dans un cas aussi simple, l'union de types est plus concise et tout aussi efficace.)
 - Remarque: Pour aller plus loin, on aurait aussi pu paramétrer le trait `LibraryEntry` mais la spécialisation a été faite au niveau des classes d'implémentation `PhysicalLibraryEntry` et `DigitalLibraryEntry` pour éviter de complexifier davantage le trait. Comme le projet est assez simple, il semble que cela suffit.
+
+### Homework 5
+
+#### Services d'exploration/manipulation de données
+
+Cinq services d'exploration/manipulation de données ont été implémentés sur les données de la bibliothèque Goodreads, chacun utilisant différents opérateurs fonctionnels et fonctionnalités Scala:
+
+- **Basic data exploration** : les méthodes `bestRatedBooks`, `bestRatedAuthors` et `mostShelvedAuthors` de la classe `User` utilisent des opérateurs fonctionnels comme `filter`, `map`, `groupBy` et `sortBy` pour extraire des informations de la bibliothèque et des reviews de l'utilisateur. Ces méthodes illustrent comment manipuler des collections de manière fonctionnelle, en évitant la mutabilité et les effets de bord.
+- **Higher order functions** : la méthode `userSimilarity` de l'objet `UserSimilarity` est une fonction d'ordre supérieur qui prend une fonction de similarité en paramètre pour calculer la similarité entre deux utilisateurs. Cela permet un code flexible et réutilisable, puisque différentes fonctions de similarité peuvent être passées sans modifier la logique de la méthode elle-même. La méthode `userJaccardSimilarity` illustre également l'utilisation d'une fonction anonyme pour définir une mesure de similarité spécifique sans avoir besoin de créer une fonction nommée séparée.
+- **FoldLeft** : la méthode `aggregateLibraryStats` de l'objet `LibraryStats` utilise `foldLeft` pour effectuer une agrégation en un seul passage sur les entrées de bibliothèque et les reviews de l'utilisateur, afin de calculer le nombre total de livres, la note moyenne et le nombre d'auteurs uniques. C'est une façon efficace de calculer plusieurs statistiques en un seul passage sur les données.
+- **Call-by-Name** : la méthode `ifLibraryNotEmpty` de l'objet `LibraryExploration` utilise des paramètres call-by-name pour retarder l'évaluation d'un bloc de code jusqu'à ce qu'il soit nécessaire. Cela permet une logique conditionnelle efficace, car le bloc de code n'est exécuté que si la bibliothèque de l'utilisateur n'est pas vide, évitant ainsi des calculs inutiles.
+- **Context abstraction with `using`/`given`** : la méthode `recommend` de l'objet `LibraryExploration` utilise le mécanisme d'abstraction de contexte de Scala pour accepter un paramètre implicite `EditionMatcher`. Cela permet une logique de recommandation flexible et réutilisable, car différents matchers peuvent être fournis sans modifier la méthode elle-même. (En gros, c'est une évolution de `isEditionAGoodMatch` du homework 3, mais on peut désormais injecter n'importe quel matcher sans modifier le code de `recommend`.)
+
+#### Tests
+
+Trois suites de tests ont été implémentées pour tester les fonctionnalités d'exploration/manipulation de données, chacune couvrant différentes méthodes et scénarios d'utilisation:
+
+- **UserTest** : cette suite de tests couvre les méthodes de la classe `User`, notamment la gestion des entrées de bibliothèque, des étagères et des fonctionnalités d'exploration de données comme les meilleurs livres et auteurs. Les tests vérifient que les méthodes retournent les résultats attendus en fonction des données d'entrée.
+- **LibraryExplorationTest** : cette suite de tests couvre les méthodes de l'objet `LibraryExploration`, notamment l'agrégation des statistiques de la bibliothèque, la logique conditionnelle avec `ifLibraryNotEmpty` et la recommandation de livres. Les tests vérifient que les méthodes fonctionnent correctement dans différents scénarios, y compris les cas où la bibliothèque est vide ou non.
+- **CsvParserTest** : cette suite de tests couvre les méthodes de parsing CSV, notamment la conversion d'une ligne CSV en une entrée de bibliothèque structurée. Les tests vérifient que les données sont correctement extraites et transformées en objets Scala..

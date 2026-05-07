@@ -1,4 +1,6 @@
 import Types.UserId
+import Types.Rating
+import utils.Similarity
 
 /**
  * Represents a user with their library and bookshelves.
@@ -92,14 +94,52 @@ case class User(
             println(s"- ${entry.edition.book.title} by ${entry.edition.book.author} (status: ${entry.readingStatus}, format: ${entry.edition.format.getOrElse("Unknown")}, bookshelves: ${entry.bookshelves.map(_.toString()).mkString(", ")})")
 
     /**
-     * Returns the user's top-rated books.
+     * Returns the user's top-rated books (data exploration). This method demonstrates functional programming, avoiding 
+     * mutable state
      * 
      * @param reviews all reviews to filter from
      * @param n number of top books to return
      * @return list of top n reviews by this user, sorted by rating
      */
-    def favoriteBooks(reviews: List[Review], n: Int): List[Review] =
-        reviews.filter(r => r.user == this.id && r.rating.isDefined).sortBy(-_.rating.get).take(n)
+    def bestRatedBooks(reviews: List[Review], n: Int): List[(String, Rating)] =
+        reviews
+            .filter(r => r.user == this.id && r.rating.isDefined)
+            .map(r => (r.book.title, r.rating.get))
+            .sortBy(-_._2)
+            .take(n)
+
+    /**
+      * Returns the user's most shelved authors based on the books in their library (data exploration). This method
+      * showcases functional programming, avoiding mutable state.
+      *
+      * @param n number of top authors to return
+      * @return list of most shelved authors, sorted by number of books shelved
+      */
+    def mostShelvedAuthors(n: Int): List[String] =
+        libraryEntries
+            .groupBy(_.edition.book.author.name)
+            .map{case (author, entries) => (author, entries.size)}
+            .toList
+            .sortBy(-_._2) 
+            .take(n)
+            .map(_._1)
+
+    /**
+      * Returns the user's best-rated authors based on their reviews (data exploration). This method demonstrates 
+      * functional programming by using higher-order functions and avoiding mutable state.
+      *
+      * @param reviews all reviews to filter from
+      * @param n number of best-rated authors to return
+      * @return list of best-rated authors with their average rating
+      */
+    def bestRatedAuthors(reviews: List[Review], n: Int): List[(String, Double)] =
+        reviews
+            .filter(r => r.user == this.id && r.rating.isDefined)
+            .groupBy(_.book.author.name)
+            .map{case (author, reviews) => (author, reviews.flatMap(_.rating).sum.toDouble / reviews.size)}
+            .toList
+            .sortBy(-_._2)
+            .take(n)
 
     /**
      * Prints the user's favorite books to the console.
@@ -109,9 +149,32 @@ case class User(
      */
     def printFavoriteBooks(reviews: List[Review], n: Int): Unit =
         println(s"========== ${this.name.toUpperCase()}'s TOP $n FAVORITE BOOKS ==========")
-        favoriteBooks(reviews, n) match
+        bestRatedBooks(reviews, n) match
             case Nil => println("No rated books found.")
-            case favs => favs.foreach(review => println(s"- ${review.book.title} (${review.rating.get} stars)"))
+            case favs => favs.foreach(r => println(s"- ${r._1} (${r._2} stars)"))
+
+    /**
+     * Prints the user's best-rated authors to the console.
+     * 
+     * @param reviews all reviews to filter from
+     * @param n number of top authors to print
+     */
+    def printBestRatedAuthors(reviews: List[Review], n: Int): Unit =
+        println(s"========== ${this.name.toUpperCase()}'S TOP $n BEST-RATED AUTHORS ==========")
+        bestRatedAuthors(reviews, n) match
+            case Nil => println("No rated authors found.")
+            case favs => favs.foreach(r => println(s"- ${r._1} (average rating: ${r._2} stars)"))
+
+    /**
+     * Prints the user's most shelved authors to the console.
+     * 
+     * @param n number of top authors to print
+     */
+    def printMostShelvedAuthors(n: Int): Unit =
+        println(s"========== ${this.name.toUpperCase()}'S TOP $n MOST SHELVED AUTHORS ==========")
+        mostShelvedAuthors(n) match
+            case Nil => println("No shelved authors found.")
+            case favs => favs.foreach(a => println(s"- ${a}"))
 
     /**
      * Retrieves a bookshelf by name.
@@ -158,3 +221,63 @@ object User:
             email = email,
             bookshelves = Bookshelf.systemBookshelves
         )
+
+object UserSimilarity:
+
+    /**
+      * Calculates the similarity between two users based on a provided similarity function (higher-order function). This
+      * allows for flexible similarity calculations using different criteria without changing the method's implementation.
+      *
+      * @param user1 the first user to compare
+      * @param user2 the second user to compare
+      * @param similarityFunction a function that takes two users and returns a similarity score as a Double
+      * @return the similarity score between the two users
+      */
+    def userSimilarity(user1: User, user2: User, similarityFunction: (User, User) => Double): Double =
+        similarityFunction(user1, user2)
+
+    /**
+      * A specific similarity function that calculates the Jaccard similarity between two users based on the books in 
+      * their libraries (showcases anonymous function).
+      *
+      * @param user1 the first user to compare
+      * @param user2 the second user to compare
+      * @return the Jaccard similarity score between the two users
+      */
+    def userJaccardSimilarity(user1: User, user2: User): Double =
+        val userJaccard = Similarity.jaccard[User, Int](
+            _.libraryEntries.map(_.edition.book.id).toSet
+        )
+        userJaccard.similarity(user1, user2)
+
+/* Object for exploring the user's library */
+object LibraryExploration:
+
+    /**
+      * Executes a code block if the user's library is not empty (call-by-name). This allows for safe execution of code 
+      * that relies on the presence of library entries without having to check for emptiness every time. The evaluation 
+      * of the code block is delayed until it's confirmed that the library is not empty.
+      *
+      * @param user the user whose library to check
+      * @param codeBlock the code block to execute if the library is not empty
+      * @return an Option containing the result of the code block if the library is not empty, or None if it is empty
+      */
+    def ifLibraryNotEmpty[A](user: User)(codeBlock: => A): Option[A] =
+        if user.libraryEntries.nonEmpty then Some(codeBlock) else None
+
+    /**
+      * Recommends editions to the user based on their preferences and a provided edition matcher (context abstraction).
+      * This allows the matcher logic to be defined separately and easy to swap out for different recommendation 
+      * strategies without modifying the recommendation method itself.
+      *
+      * @param user the user for whom to recommend editions
+      * @param editions the list of editions to consider for recommendation
+      * @param n the number of recommendations to return
+      * @param matcher the edition matcher to use for evaluating recommendations
+      * @return a list of recommended editions
+      */
+    def recommend[E <: Edition[Format]](user: User, editions: List[E], n: Int)
+        (using matcher: EditionMatcher[E]): List[E] =
+        editions
+        .filter(edition => matcher.isGoodFor(user.preference, edition))
+        .take(n)

@@ -9,5 +9,4 @@ object Types:
     type ISBN = String
     type ISBN13 = String
     type Year = Int
-    type Date = String
     type Rating = Int

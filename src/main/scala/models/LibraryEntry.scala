@@ -1,5 +1,3 @@
-import Types.Date
-
 /**
  * Represents an entry in a user's library.
  * 
@@ -15,10 +13,10 @@ import Types.Date
  */
 trait LibraryEntry:
     val edition: Edition[Format]
-    val dateAdded: Date
+    val dateAdded: String
     val readingStatus: ReadingStatus = ReadingStatus.ToRead
-    val dateRead: Option[Date] = None
-    val purchaseDate: Option[Date] = None
+    val dateRead: Option[String] = None
+    val purchaseDate: Option[String] = None
     val privateNotes: Option[String] = None
     val readCount: Int = 0
     val bookshelves: List[ShelfPlacement] = List()
@@ -61,7 +59,7 @@ trait LibraryEntry:
     def makeCopy(
         newBookshelves: List[ShelfPlacement] = bookshelves,
         newReadingStatus: ReadingStatus = readingStatus,
-        newDateRead: Option[Date] = dateRead,
+        newDateRead: Option[String] = dateRead,
         newReadCount: Int = readCount
     ): Self
 
